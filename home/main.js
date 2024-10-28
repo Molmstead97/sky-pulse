@@ -21,6 +21,9 @@ const getCurrentWeather = async () => {
     const currentDay = currentTime.getDate();
     const temperatures = [];
 
+    let closestPeriod = forecastPeriods[0];
+    let smallestTimeDiff = Infinity;
+
     for (let i = 0; i < forecastPeriods.length; i++) {
       const startTime = new Date(forecastPeriods[i].startTime);
 
@@ -30,23 +33,22 @@ const getCurrentWeather = async () => {
         const formattedHour = hour % 12 || 12; // Convert 24-hour time to 12-hour time
 
         temperatures.push({ time: `${formattedHour} ${hour < 12 ? 'AM' : 'PM'}`, temperature });
+
+        // Find the closest period to current time
+        const timeDiff = Math.abs(currentTime - startTime);
+        if (timeDiff < smallestTimeDiff) {
+          smallestTimeDiff = timeDiff;
+          closestPeriod = forecastPeriods[i];
+        }
       }
     }
 
-    for (let i = 0; i < forecastPeriods.length; i++) {
-      const startTime = new Date(forecastPeriods[i].startTime);
-      const endTime = new Date(forecastPeriods[i].endTime);
+    const currentTemp = closestPeriod.temperature;
+    const windSpeed = closestPeriod.windSpeed;
+    const shortForecast = closestPeriod.shortForecast;
 
-      if (currentTime >= startTime && currentTime < endTime) {
-        const currentTemp = forecastPeriods[i].temperature;
-        const windSpeed = forecastPeriods[i].windSpeed;
-        const shortForecast = forecastPeriods[i].shortForecast;
+    return { currentTemp, windSpeed, shortForecast, temperatures };
 
-        return { currentTemp, windSpeed, shortForecast, temperatures };
-      }
-    }
-
-    throw new Error("No current weather data available");
   } catch (error) {
     console.error("Error:", error);
     return null;
@@ -103,7 +105,7 @@ const createTemperatureCharts = async () => {
 
   const temps = weatherData.temperatures.map(entry => entry.temperature);
   const labels = weatherData.temperatures.map(entry => entry.time);
-
+  
   new Chart(ctx, {
     type: 'line',
     data: {
@@ -117,11 +119,18 @@ const createTemperatureCharts = async () => {
       }]
     },
     options: {
+      responsive: true,
+      maintainAspectRatio: false,
       scales: {
         x: {
           title: {
             display: true,
             text: 'Time of Day'
+          },
+          ticks: {
+            maxRotation: 0,
+            autoSkip: false,
+            maxTicksLimit: 24
           }
         },
         y: {
@@ -129,14 +138,26 @@ const createTemperatureCharts = async () => {
             display: true,
             text: 'Temperature (°F)'
           },
-          suggestedMin: 0,
-          suggestedMax: 110,
+          suggestedMin: Math.min(...temps) - 5,
+          suggestedMax: Math.max(...temps) + 5,
+        }
+      },
+      plugins: {
+        legend: {
+          display: false 
+        }
+      },
+      layout: {
+        padding: {
+          top: 20,
+          right: 20,
+          bottom: 20,
+          left: 20
         }
       }
     }
   });
-};
-
+}
 document.addEventListener('DOMContentLoaded', async () => {
   await displayWeatherAndAlerts();
   await createTemperatureCharts();

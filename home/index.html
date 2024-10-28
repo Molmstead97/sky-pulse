@@ -19,6 +19,7 @@
       crossorigin="anonymous"
     ></script>
   </head>
+
   <body
     class="bg-gradient-to-b from-gray-200 to-gray-400 text-gray-900 min-h-screen"
   >
@@ -35,9 +36,11 @@
     </div>
 
     <!-- Navbar -->
-    <section class="p-4">
-      <nav class="flex justify-start items-center max-w-7xl mx-auto">
-        <ul class="flex space-x-6 bg-gray-50 p-2 rounded-md shadow-md">
+    <section class="ml-20 p-4 flex justify-start items-center">
+      <nav>
+        <ul
+          class="flex justify-center space-x-6 bg-white p-2 rounded-md shadow-md"
+        >
           <li>
             <a
               id="home"
@@ -75,28 +78,45 @@
     </section>
 
     <!-- Sidebar -->
-    <div class="collapse" id="navbarToggleExternalContent" data-bs-theme="dark">
-      <div class="bg-dark p-4">
-        <h5 class="text-body-emphasis h4">Collapsed content</h5>
-        <span class="text-body-secondary"
-          >Toggleable via the navbar brand.</span
-        >
+    <div
+      class="offcanvas offcanvas-start"
+      tabindex="-1"
+      id="navbarToggleExternalContent"
+      data-bs-theme="dark"
+    >
+      <div class="offcanvas-header">
+        <h5 class="offcanvas-title text-white">Menu</h5>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          data-bs-dismiss="offcanvas"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="offcanvas-body bg-dark">
+        <div class="text-white">
+          <h5 class="text-body-emphasis h4">Sidebar</h5>
+          <p class="text-body-secondary">Hi</p>
+          <p class="text-body-secondary">Hello</p>
+          <p class="text-body-secondary">Howdy</p>
+          <p class="text-body-secondary">Hey</p>
+        </div>
       </div>
     </div>
-    <nav class="navbar navbar-dark bg-dark">
-      <div class="container-fluid">
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarToggleExternalContent"
-          aria-controls="navbarToggleExternalContent"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span class="navbar-toggler-icon"></span>
-        </button>
-      </div>
+
+    <!-- Sidebar Toggle Button -->
+    <nav class="navbar w-auto fixed top-4 left-4">
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-bs-toggle="offcanvas"
+        data-bs-target="#navbarToggleExternalContent"
+        aria-controls="navbarToggleExternalContent"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
     </nav>
 
     <!-- Weather Cards -->
@@ -121,9 +141,15 @@
         ></div>
       </div>
     </section>
-    <div class="w-9/12 h-auto flex flex-col justify-center bg-white p-4 rounded-lg shadow-lg">
-      <canvas id="temperatureChart"></canvas>
-    </div>
+
+    <!-- Temperature Chart -->
+    <section class="flex justify-center items-center">
+      <div class="w-full max-w-4xl">
+        <div class="bg-white p-4 rounded-lg shadow-lg">
+          <canvas id="temperatureChart" class="h-[50vh]"></canvas>
+        </div>
+      </div>
+    </section>
 
     <!-- Modal -->
     <div
